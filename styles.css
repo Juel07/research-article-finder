@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap");
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  outline: none;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Rubik", sans-serif;
+  color: #353131;
+  padding: 2em 0;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #eed2c5;
+}
+
+.wrapper {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.controls,
+.results {
+  padding: 2em;
+}
+
+form p:nth-of-type(1) {
+  margin-top: 0;
+}
+h1 {
+  font-family: Georgia, serif;
+  text-align: center;
+}
+h2 {
+  font-size: 20px;
+}
+h6 {
+  font-size: 18px;
+}
+
+input[type="text"] {
+  height: 2.2em;
+  width: 300px;
+  font-size: 1em;
+  max-width: 100%;
+  padding: 10px;
+  border: 2px solid #353131;
+  border-radius: 5px;
+  outline: none;
+}
+input::placeholder {
+  color: #353131;
+  font-size: 15px;
+}
+
+button {
+  text-align: center;
+  background-color: #353131;
+  color: #f0f0f0;
+  padding: 9px 15px;
+  outline: none;
+  border: 2px solid #353131;
+  border-radius: 5px;
+  letter-spacing: 0.5px;
+}
+button:hover {
+  transform: scale(0.95);
+  cursor: pointer;
+}
+
+article p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+article p:nth-of-type(2) {
+  font-size: 14px;
+  line-height: 2;
+}
+
+nav {
+  margin-bottom: 50px;
+}
+
+a {
+  color: #005f95;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.prev {
+  float: left;
+}
+
+.next {
+  float: right;
+}
+
+article {
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #f0f1f3;
+  border-radius: 5px;
+  border-top: 5px solid #f0f1f3;
+}
+
+article:hover {
+  background-color: #fcfcfc;
+  border-top: 5px solid #005f95;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  text-align: left;
+}
+
+img {
+  float: left;
+  margin-right: 20px;
+  max-width: 200px;
+}
+
+.clearfix {
+  clear: both;
+}
+
+span {
+  background-color: #ccc;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+}
