@@ -104,28 +104,52 @@ function displayResults(json) {
             img.alt = current.title;
             article.appendChild(img);
 
-
+            console.log(current.year)
             const details = document.createElement('div');
             details.classList.add('details')
-            if (!current.publisher) { // check if the publisher name is available
-                details.innerHTML = `
-                <div><strong>Published by: </strong>Unknown</div><div><strong> Author: </strong> ${current.authors}</div> <div><strong> Year: </strong> ${current.year.toString().slice(0, 4)}</div>
-                <div>${current.description.slice(0, 500)}...</div>`
-            } else {
-                details.innerHTML = `
-                <div><strong>Published by: </strong> ${current.publisher}</div> <div><strong> Author: </strong> ${current.authors}</div> <div><strong> Year: </strong> ${current.year.toString().slice(0, 4)}</div>
-                <div>${current.description.slice(0, 500)}...</div>`
+            const publisherName = document.createElement('div')
+            if (current.publisher) {
+                publisherName.innerHTML = `<strong>Published by: </strong> ${current.publisher}</div>`
+                details.appendChild(publisherName)
             }
+            const authorNames = document.createElement('div')
+            if (current.authors) {
+                authorNames.innerHTML = `<strong>Authors: </strong> ${current.authors}</div>`
+                details.appendChild(authorNames)
+            }
+            const yearPublished = document.createElement('div')
+            if (current.year.toString().slice(0, 2) === '20') {
+                yearPublished.innerHTML = `<strong>Year: </strong> ${current.year.toString().slice(0, 4)}</div>`
+                details.appendChild(yearPublished)
+            }
+            const snippet = document.createElement('div')
+            if (current.description) {
+                snippet.textContent = current.description.slice(0, 500) + '...'
+                details.appendChild(snippet)
+            }
+            // if (!current.publisher) { // check if the publisher name is available
+            //     details.innerHTML = `
+            //     <div><strong>Published by: </strong>Unknown</div><div><strong> Author: </strong> ${current.authors}</div> <div><strong> Year: </strong> ${current.year.toString().slice(0, 4)}</div>
+            //     <div>${current.description.slice(0, 500)}...</div>`
+            // } else {
+            //     details.innerHTML = `
+            //     <div><strong>Published by: </strong> ${current.publisher}</div> <div><strong> Author: </strong> ${current.authors}</div> <div><strong> Year: </strong> ${current.year.toString().slice(0, 4)}</div>
+            //     <div>${current.description.slice(0, 500)}...</div>`
+            // }
+            //current.year !== '10000' || current.year !== '1000'
             article.appendChild(details);
 
             const keywords = document.createElement('div');
-            keywords.classList.add('keywords')
-            keywords.innerHTML = `<strong>Topics: </strong>`;
-            for (let j = 0; j < current.topics.length; j += 1) {
-                const span = document.createElement('span');
-                span.textContent += current.topics[j] + ' ';
-                keywords.appendChild(span);
+            if (current.topics.length > 0) {
+                keywords.classList.add('keywords')
+                keywords.innerHTML = `<strong>Topics: </strong>`;
+                for (let j = 0; j < current.topics.length; j += 1) {
+                    const span = document.createElement('span');
+                    span.textContent += current.topics[j] + ' ';
+                    keywords.appendChild(span);
+                }
             }
+
             article.appendChild(keywords);
 
 
