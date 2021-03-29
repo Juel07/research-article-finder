@@ -6,9 +6,7 @@ let url;
 
 // Grab references to all the DOM elements 
 
-const searchTerm = document.querySelector('.search');
-const startDate = document.querySelector('.start-date');
-const endDate = document.querySelector('.end-date');
+const searchQuery = document.querySelector('.search');
 const searchForm = document.querySelector('form');
 
 const nextBtn = document.querySelector('.next');
@@ -17,7 +15,7 @@ const previousBtn = document.querySelector('.prev');
 const section = document.querySelector('section');
 const nav = document.querySelector('nav');
 
-// Hide the "Previous"/"Next" navigation to begin with, as we don't need it immediately
+// Hide the "Previous"/"Next" navigation, as it's not required immediately
 nav.style.display = 'none';
 
 // define the initial page number and status of the navigation being displayed
@@ -46,7 +44,7 @@ function previousPage(e) {
 
 
 function submitSearch(e) {
-    pageNumber = 0;
+    pageNumber = 1;
     fetchResults(e);
 }
 
@@ -55,7 +53,7 @@ function fetchResults(e) {
     e.preventDefault();
 
     // Assemble the full URL
-    url = baseURL + searchTerm.value + '?page=1' + '&pageSize=5' + '&metadata=true' + '&fulltext=false' + '&urls=true' + '&apiKey=' + key;
+    url = baseURL + searchQuery.value + '?page=1' + '&pageSize=10' + '&metadata=true' + '&fulltext=false' + '&urls=true' + '&apiKey=' + key;
 
     // Use fetch() to make the request to the API
     fetch(url).then(function (result) {
@@ -71,74 +69,69 @@ function displayResults(json) {
     }
 
     const articles = json.data;
+    const totalArticles = document.createElement('div');
 
-    if (articles.length === 10) {
-        nav.style.display = 'block';
+    if (!articles) {
+        totalArticles.textContent = 'No articles found.'
+        section.appendChild(totalArticles);
     } else {
-        nav.style.display = 'none';
-    }
 
-    if (articles.length === 0) {
-        const para = document.createElement('p');
-        para.textContent = 'No articles found.'
-        section.appendChild(para);
-    } else {
+        // display total number of articles found
+        totalArticles.innerHTML = `<strong>${json.totalHits}</strong> articles found.`
+        totalArticles.classList.add('totalArticles')
+        section.appendChild(totalArticles);
+
         for (var i = 0; i < articles.length; i++) {
+
             let current = articles[i];
 
             const article = document.createElement('article');
 
+            // display main article heading with link
             const heading = document.createElement('h2');
             const link = document.createElement('a');
-            if (current.downloadUrl !== "") { // check if the download link exists
+            if (current.downloadUrl) { // check if the download link exists
                 link.href = current.downloadUrl;
             } else {
                 link.href = current.fulltextUrls[1];
             }
+            link.setAttribute('target', '_blank')
             link.textContent = current.title;
             article.appendChild(heading);
             heading.appendChild(link);
 
+            // display image media
             const img = document.createElement('img');
             img.src = 'http://core.ac.uk/image/' + current.id + '/medium';
             img.alt = current.title;
             article.appendChild(img);
 
-            console.log(current.year)
+            // display various details about articles
             const details = document.createElement('div');
             details.classList.add('details')
-            const publisherName = document.createElement('div')
-            if (current.publisher) {
+            if (current.publisher) { // check if publisher's name is available
+                const publisherName = document.createElement('div')
                 publisherName.innerHTML = `<strong>Published by: </strong> ${current.publisher}</div>`
                 details.appendChild(publisherName)
             }
-            const authorNames = document.createElement('div')
-            if (current.authors) {
+            if (current.authors) { // check if author names are available
+                const authorNames = document.createElement('div')
                 authorNames.innerHTML = `<strong>Authors: </strong> ${current.authors}</div>`
                 details.appendChild(authorNames)
             }
-            const yearPublished = document.createElement('div')
-            if (current.year.toString().slice(0, 2) === '20') {
+            if (current.year.toString().slice(0, 2) === '20') { // check if year is valid
+                const yearPublished = document.createElement('div')
                 yearPublished.innerHTML = `<strong>Year: </strong> ${current.year.toString().slice(0, 4)}</div>`
                 details.appendChild(yearPublished)
             }
-            const snippet = document.createElement('div')
             if (current.description) {
+                const snippet = document.createElement('div')
                 snippet.textContent = current.description.slice(0, 500) + '...'
                 details.appendChild(snippet)
             }
-            // if (!current.publisher) { // check if the publisher name is available
-            //     details.innerHTML = `
-            //     <div><strong>Published by: </strong>Unknown</div><div><strong> Author: </strong> ${current.authors}</div> <div><strong> Year: </strong> ${current.year.toString().slice(0, 4)}</div>
-            //     <div>${current.description.slice(0, 500)}...</div>`
-            // } else {
-            //     details.innerHTML = `
-            //     <div><strong>Published by: </strong> ${current.publisher}</div> <div><strong> Author: </strong> ${current.authors}</div> <div><strong> Year: </strong> ${current.year.toString().slice(0, 4)}</div>
-            //     <div>${current.description.slice(0, 500)}...</div>`
-            // }
-            //current.year !== '10000' || current.year !== '1000'
             article.appendChild(details);
 
+            // display keywords
             const keywords = document.createElement('div');
             if (current.topics.length > 0) {
                 keywords.classList.add('keywords')
@@ -149,15 +142,21 @@ function displayResults(json) {
                     keywords.appendChild(span);
                 }
             }
-
             article.appendChild(keywords);
-
 
             const clearfix = document.createElement('div');
             clearfix.setAttribute('class', 'clearfix');
             article.appendChild(clearfix);
 
             section.appendChild(article);
+
         }
+    }
+
+    // display pagination if 10 articles are found
+    if (articles.length >= 10) {
+        nav.style.display = 'block';
+    } else {
+        nav.style.display = 'none';
     }
 }
