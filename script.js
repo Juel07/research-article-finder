@@ -44,7 +44,7 @@ function previousPage(e) {
 
 
 function submitSearch(e) {
-    pageNumber = 1;
+    pageNumber = 0;
     fetchResults(e);
 }
 
@@ -93,7 +93,7 @@ function displayResults(json) {
             if (current.downloadUrl) { // check if the download link exists
                 link.href = current.downloadUrl;
             } else {
-                link.href = current.fulltextUrls[1];
+                link.href = current.fulltextUrls[1]; // provide alternative external link
             }
             link.setAttribute('target', '_blank')
             link.textContent = current.title;
